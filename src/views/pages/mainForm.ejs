@@ -1,0 +1,39 @@
+
+<%- include('../partials/mainHead', {title:'Todo App'}) %>
+<body>
+    <div>
+    <h1>Todo App</h1>
+
+    <form action="<%=account%>" method="POST">
+        <% if (account==="signUp"){ %>
+        <label for="fname">First Name</label><br>
+        <input type="text" id="fname" name="fname" placeholder="John"><br>
+        <label for="lname">Last Name</label><br>
+        <input type="text" id="lname" name="lname" placeholder="Doe"><br>
+        <% } %>
+        <label for="username">Username</label><br>
+        <input type="text" id="username" name="username" placeholder="Username"><br>
+        <label for="password">Password</label><br>
+        <input type="password" id="password" name="password" placeholder="*******"><br>
+        <% if (account === "login") { %>
+        <br><input type="submit" value="Log In">
+    </form>
+        <% if (failed===true) { %>
+        <p style="color:red"><%= message%></p>
+        <% } %>
+        <a href="/signup">If you don't have an account, sign up here.</a>
+        <% } else { %>
+        <label for="passwordConf">Confirm Password</label><br>
+        <input type="password" id="passwordConf" name="passwordConf" placeholder="*******"><br><br>
+        <input type="submit" value="Sign Up">
+    </form>
+        <% if (failed===true) { %>
+        <% for (problem of message) { %>
+            <p style="color:red"><%= problem %></p>
+        <% } %>
+        <% } %>
+        <a href="/login">If you have an account already, log in here.</a>
+    <% } %>
+    </div>
+</body>
+</html>

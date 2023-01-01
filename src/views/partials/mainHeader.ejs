@@ -1,0 +1,28 @@
+<%- include('../partials/mainHead', {title:'Todo App'}) %>
+<body>
+  <div class="navbar-div">
+    <h3>Todo App</h3>
+    <h3>
+      <form action="/logout" method="post">
+        <button type="submit" name="logout" value="logout">Log Out</button>
+      </form>
+      <form action="/" method="get">
+        <button type="submit" name="home" value="home">Home</button>
+      </form>
+    </h3>
+  </div>
+</body>
+
+<style>
+    .navbar-div{
+        display: flex;
+        flex-direction: row;
+        min-width: 100vh;
+        justify-content: space-between;
+
+    }
+    .navbar-div a {
+      text-decoration: none;
+    }
+</style>
+<script></script>

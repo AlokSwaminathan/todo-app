@@ -1,0 +1,243 @@
+
+<%- include('../partials/mainHeader') %>
+<% if (groups.length===0) {%><p id="editInfo">You don't have any groups, click add group to create your first group</p><% } else {%>
+    <p id="editInfo">You haven't selected a group to edit, click add group to create a new group, or click on one of your existing groups to edit it.</p>
+    <% } %>
+    <div id="groupEditArea"><button id="addGroup" type="button">Add Group</button>
+        <form action="addGroup" method="POST" id="addGroupForm" style="display: inline-block">
+            <label>Group Name</label>
+            <input type="text" id="groupNameA" name="groupName" onkeydown="return event.key != 'Enter';"/>
+            <label for="groupColor">Group Color</label>
+            <input type="color" id="groupColorA" name="groupColor" />
+            <button type="button" id="discardGroup">Discard Group</button>
+            <button type="submit" id="createGroup">Create Group</button>
+        </form>
+        <form action="editGroup" method="POST" id="editGroupForm" style="display: inline-block">
+            <label>Group Name</label>
+            <input type="text" id="groupNameE" name="groupName" onkeydown="return event.key != 'Enter';"/>
+            <label for="groupColor">Group Color</label>
+            <input type="color" id="groupColorE" name="groupColor" />
+            <input type="submit" value="Delete Group" name="deleteGroup" onclick="deleteGroupFunc();return (false);">
+            <button type="button" id="stopEditing">Stop Editing Group</button>
+            <input type="submit" value="Edit Group" name="editGroup">
+            <input id="hiddenRelativeID" type="text" name="relativeID" style="display: none">
+        </form>
+        <form id="delConf" action="deleteGroup" method="POST">
+            <select name="deleteConfirmation" id="deleteConfirmation">
+                <option value="no">No(Keep)</option>
+                <option value="yes">Yes(Delete)</option>
+            </select>
+            <select name="deleteTodos" id="deleteTodos">
+                <option value="no">No(Keep Todos)</option>
+                <option value="yes">Yes(Delete Todos)</option>
+            </select>
+            <input id="delHiddenRelativeID" type="text" name="relativeID" style="display: none">
+            <input id="delHiddenGroupName" type="text" name="groupName" style="display: none">
+            <input type="submit" id="confirm" value="confirm">
+        </form>
+        <p id="errors" style="color:red"></p>
+    </div>
+<div id="groups">
+<ol id="groupList">
+    <% if(groups) {for (group of groups){ %>
+        <li style="color:<%=group.color%>" id="<%=group.relativeID%>" class="groupBullets"><%= group.groupName%></li>
+    <% }} %>
+</ol>
+</div>
+</body>
+
+</html>
+
+<style>
+#groups{
+    display: flex;
+    flex-direction: row;
+}
+</style>
+<script>
+    let editGroup = false;
+    let groupList = [];
+    [...document.getElementsByTagName('li')].forEach( function(ele){
+        //console.log("element, value", ele, ele.innerHTML);
+        groupList.push(ele.innerHTML);
+    });
+    //console.log("grouplist: ", groupList);
+    let errors = document.getElementById('errors');
+    function clearError(){
+        errors.innerHTML = '';
+    }
+    const originalEditGroupText = document.getElementById('editInfo').innerHTML;
+    let addGroup = document.getElementById('addGroup');
+    let addGroupForm = document.getElementById('addGroupForm');
+    let editGroupForm = document.getElementById('editGroupForm');
+    let delConf = document.getElementById('delConf');
+    delConf.style.display = 'none';
+    editGroupForm.style.display = 'none';
+    addGroupForm.style.display = 'none';
+    let editInfo = document.getElementById('editInfo');
+    document.getElementById('addGroup').addEventListener('click', function() {
+        clearError();
+        addGroupForm.style.display = 'inline-block'
+        editInfo.innerHTML = "You are now editing a new group, click create group to create it, or discard group to cancel it"
+        addGroup.style.display = 'none';
+    });
+    document.getElementById('discardGroup').addEventListener('click', function(){
+        clearError();
+        addGroup.style.display = 'inline-block';
+        addGroupForm.style.display = 'none';
+        editInfo.innerHTML= originalEditGroupText;
+    });
+    document.getElementById('groupColorA').addEventListener('input', function(){
+        document.getElementById('groupNameA').style.color = event.target.value;
+    });
+    document.getElementById('groupColorE').addEventListener('input', function(){
+        document.getElementById('groupNameE').style.color = event.target.value;
+    });
+
+    addGroupForm.addEventListener('submit', function(){
+        let problems = 0;
+        let groupName = document.getElementById('groupNameA');
+        let groupColor = document.getElementById('groupColorA');
+        //console.log(groupName.value);
+        
+        if (groupName.value.length === 0 || groupColor.value==="#ffffff" || groupList.includes(groupName.value)){
+            event.preventDefault();
+        }
+        if (groupName.value.length===0){
+            errors.innerHTML="Fill out group name";
+            problems++;
+        } 
+        if (groupColor.value === "#ffffff"){
+            if (problems === 0){
+                errors.innerHTML="Color cannot be white";
+                problems++;
+            } else {
+                errors.innerHTML += ", Color cannot be white";
+                problems++;
+            }
+        }
+        if (groupList.includes(groupName.value)) {
+            if (problems === 0){
+                errors.innerHTML="Cannot repeat group names"   
+            } else{
+                errors.innerHTML += ", Cannot repeat group names"
+                problems++;
+            }
+        }
+    });
+    
+    /*let editGroup = (group) => {
+        editInfo.innerHTML = "You are editing the group \"".concat(group.innerHTML).concat("\"");
+        addGroup.style.display = 'none';
+        addGroupForm.style.display = 'none';
+        editGroupForm.style.display = 'inline-block';
+        let groupName = document.getElementById('groupNameE');
+        let groupColor = document.getElementById('groupColorE');
+        groupName.value = group.innerHTML;
+        groupColor.value = group.style.color;
+
+    }
+    let groupBullets = document.querySelectorAll('.groupBullets');
+
+    groupBullets.forEach( (group) => {
+        group.addEventListener('click',editGroup(group));
+    })*/
+
+    function componentToHex(c) {
+        let hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+    function rgbToHex(rgb) {
+        rgb = rgb.split(',');
+        for (i in rgb){
+            rgb[i] = rgb[i].replace( /[^0-9]/g, '')
+        }
+        //console.log(rgb);
+        return "#" + componentToHex(parseInt(rgb[0])) + componentToHex(parseInt(rgb[1])) + componentToHex(parseInt(rgb[2]));
+    }
+
+    let groupOL = document.getElementById('groupList');
+    groupOL.addEventListener('click', (ele) => {
+        if (ele.target.classList.contains('groupBullets')){
+            let group = ele.target;
+        clearError();
+        editInfo.innerHTML = "You are editing the group \"".concat(group.innerHTML).concat("\"");
+        addGroup.style.display = 'none';
+        addGroupForm.style.display = 'none';
+        editGroupForm.style.display = 'inline-block';
+        let groupName = document.getElementById('groupNameE');
+        let groupColor = document.getElementById('groupColorE');
+        groupName.value = group.innerHTML;
+        let prevGroupColorHex = rgbToHex(group.style.color);
+        //console.log(prevGroupColorHex);
+        groupColor.value = prevGroupColorHex;
+        document.getElementById("hiddenRelativeID").value = group.id;
+        }
+    })
+
+    document.getElementById('stopEditing').addEventListener('click', function(){
+        editInfo.innerHTML = originalEditGroupText;
+        clearError();
+        addGroup.style.display = 'inline-block';
+        editGroupForm.style.display = 'none';
+    });
+
+    editGroupForm.addEventListener('submit', function(){
+        let tempGroupList = [...groupList];
+        tempGroupList.splice(tempGroupList.indexOf(document.getElementById(document.getElementById('hiddenRelativeID').value).innerHTML), 1);
+        //console.log(tempGroupList);    
+        let problems = 0;
+            let groupName = document.getElementById("groupNameE").value;
+            let groupColor = document.getElementById("groupColorE");
+            if (tempGroupList.includes(groupName) || groupColor.value === "#ffffff" || groupName === 0){
+                event.preventDefault();
+            }
+            if (tempGroupList.includes(groupName)){
+                errors.innerHTML = "Cannot repeat group names";
+                problems++;
+            }
+            if (groupColor.value === "#ffffff"){
+                if (problems === 0){
+                    errors.innerHTML = "Color cannot be white"
+                    problems++;
+                } else {
+                    errors.innerHTML+= ", Color cannot be white"
+                    problems++;
+                }
+            }
+            if (groupName.length === 0){
+                if (problems === 0){
+                    errors.innerHTML = "Group name cannot be empty"
+                    problems++;
+                } else {
+                    errors.innerHTML+= ", Group name cannot be empty"
+                    problems++;
+                }
+            }
+        
+    });
+    
+    function deleteGroupFunc(){
+        editGroupForm.style.display = 'none';
+        editInfo.innerHTML = 'Are you sure you want to delete this group?';
+        delConf.style.display = 'inline-block';
+        document.getElementById('delHiddenRelativeID').value = document.getElementById('hiddenRelativeID').value; 
+        document.getElementById('delHiddenGroupName').value = document.getElementById(document.getElementById('hiddenRelativeID').value).innerHTML;
+        clearError();
+        //console.log( document.getElementById('delHiddenGroupName').value, document.getElementById('delHiddenRelativeID').value )
+    }
+
+    delConf.addEventListener('submit', function(){
+        if (document.getElementById('deleteConfirmation').value === "no"){
+            event.preventDefault();
+        editInfo.innerHTML = "You are editing the group \"".concat(document.getElementById(document.getElementById('hiddenRelativeID').value).innerHTML).concat("\"");
+        addGroup.style.display = 'none';
+        addGroupForm.style.display = 'none';
+        editGroupForm.style.display = 'inline-block';
+        delConf.style.display = 'none';
+            
+        }
+    });
+
+
+</script>

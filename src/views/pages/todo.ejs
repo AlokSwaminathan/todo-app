@@ -1,0 +1,87 @@
+
+<%- include('../partials/mainHeader') %>
+
+<form class="sameLine" action="/addTask" method="GET"><button type="submit" >Add Task</button></form>
+<form class="sameLine" action="/groupEdit" method="GET"><button type="submit" >Edit Groups</button></form>
+<label for="showCompleted">Show Completed: </label><input type="checkbox" id="showCompleted" checked>
+<table style="min-width: 99vw">
+    <tr>
+        <th>Group</th>
+        <th>Todo</th>
+        <th>Description</th>
+        <th>Due Date</th>
+        <th>Work Time</th>
+        <th>Completion</th>
+        
+    </tr>
+    <% if(todos){for (todo of todos) {%>
+        <tr class='todos <%if (todo.completed === 1) {%>true<% } else {%>false<%}%>'>
+            <td style="color:<%=groupColor[todo.groupName]%>"><%=todo.groupName%></td>
+            <td><%=todo.todo%></td>
+            <td><%=todo.description%></td>
+            <td><%=todo.dueDate%></td>
+            <td><%if(todo.workStartTime){%><%=todo.workStartTime%><%} else{%>NA<%}%><strong style="font-size:30px"> - </strong><% if (todo.workEndTime){%><%=todo.workEndTime%><%} else{%>NA<%}%></td>
+            <td>
+                <input type="checkbox" value="<%=todo.userRelatedID%>" onclick="checkboxClicked(this);" class="todoCompleteCheckbox" <%if (todo.completed) {%> checked <%}%>>
+            </td><td><form class="sameLine" action="deleteTodo" method="POST">
+                    <input type="submit" name="deleteButton" id="<%=todo.userRelatedID%>" value="Delete" style="color: red">
+                    <input type="text" style="display: none" name="relativeID" value="<%=todo.userRelatedID%>">
+                </form>
+            </td>
+        </tr>
+    <%}}%>
+
+</table>
+</body>
+
+</html>
+
+<style>
+    form.sameLine{
+        display: inline-block;
+    }
+    th{
+        text-align: left;
+    }
+</style>
+
+<script>
+    let showCompleted = document.getElementById('showCompleted');
+    showCompleted.addEventListener('click', function(){
+        if (showCompleted.checked){
+            [...document.getElementsByClassName('todos')].forEach( (ele)=>{
+                ele.style.display = 'table-row';
+            });
+
+            
+        } else {
+            [...document.getElementsByClassName('todos')].forEach( (ele)=>{
+                let checkbox = ele.getElementsByClassName('todoCompleteCheckbox')[0];
+                //console.log(checkbox);
+                if (checkbox.checked === true){
+                    ele.style.display = 'none';
+                }
+            });
+
+        }
+    });
+
+    function checkboxClicked(checkbox){
+        let checkboxState = checkbox.checked;
+        if (checkboxState === true && showCompleted.checked === false){
+            checkbox.parentElement.parentElement.style.display = 'none';
+            checkbox.parentElement.parentElement.classList.remove('false');
+            checkbox.parentElement.parentElement.classList.add('true');
+        }
+        const request = new XMLHttpRequest();
+        let reqData = {
+            "relativeID": checkbox.value
+        }
+        //console.log(reqData);
+        request.open("POST",'/reverseCompletion',true);
+        request.setRequestHeader('Content-Type','application/json');
+        request.send(JSON.stringify(reqData));
+
+    }
+
+</script>
