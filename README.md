@@ -1,5 +1,5 @@
 # TODO-APP
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://youtu.be/ptY_FUHrnSA
 #### Description: 
 This project uses **Node.js**, which was used because it is the standard for backend web development, and I chose it over flask to gain experience in it
 and Typescript, which was used because it would help deal with many of the typing issues of Javascript and help me avoid runtime errors and catch them in compilation instead, and the following NPM Libraries:
@@ -28,6 +28,6 @@ and Typescript, which was used because it would help deal with many of the typin
    ![](/images/addTask.png)
    This is where you add a task, and only 3 of the 6 given fields are required. Todos do not need to be unique, and to get added all that is needed it a valid date in the Due Date, selection of some group or none at all, and some form of todo. If you want to add groups you can go home using the home button and choose the edit groups option.
    
-    ![](/images/addGroup.png)
-    In this page you can see all of your groups, along with the colors that you have chosen for them, if you want, you can add a new group entirely and name it whatever you like, as long at it doesn't overlap, and give it any color that isn't completely white. If either of those two conditions aren't met, the group will be rejected by client side javascript. Once it gets through to the server, the todo is added and the page is refreshed to hold the new todo. You can also choose to click on a todo so you can edit its name and color, or choose to delete it, prompting a confirmation. When confirming the deletion of a todo, you can make the option to remove all of the tasks corresponding to it as well.
+  ![](/images/addGroup.png)
+  In this page you can see all of your groups, along with the colors that you have chosen for them, if you want, you can add a new group entirely and name it whatever you like, as long at it doesn't overlap, and give it any color that isn't completely white. If either of those two conditions aren't met, the group will be rejected by client side javascript. Once it gets through to the server, the todo is added and the page is refreshed to hold the new todo. You can also choose to click on a todo so you can edit its name and color, or choose to delete it, prompting a confirmation. When confirming the deletion of a todo, you can make the option to remove all of the tasks corresponding to it as well.
     
