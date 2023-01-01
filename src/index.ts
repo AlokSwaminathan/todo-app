@@ -49,7 +49,7 @@ app.get("/todos", (req: Request, res: Response) => {
       todosDB[i].workStartTime = moment(new Date(todosDB[i].workStartTime).toUTCString()).local(true).format("HH:mm MM-DD-YYYY ");
       }
       if (todosDB[i].workEndTime){
-      todosDB[i].workEndTime = moment(new Date(todosDB[i].workEndTime).toUTCString()).local(true).format("HH:mm DD-MM-YYYY");
+      todosDB[i].workEndTime = moment(new Date(todosDB[i].workEndTime).toUTCString()).local(true).format("HH:mm MM-DD-YYYY");
       }
     }
 
