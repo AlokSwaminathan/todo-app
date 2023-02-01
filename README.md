@@ -3,14 +3,23 @@
 #### Description: 
 This project uses **Node.js**, which was used because it is the standard for backend web development, and I chose it over flask to gain experience in it
 and Typescript, which was used because it would help deal with many of the typing issues of Javascript and help me avoid runtime errors and catch them in compilation instead, and the following NPM Libraries:
+
   **SQLITE 3**: For storing Users, Todos, and Groups locally, without having to establish a connection to any sort of server.
+
   **Express**: To simplify the process of routing, and also made it easier to set cookeis
+
   **dotenv**: To store away environment variables in secret, although it was only used for the PORT
+
   **EJS**: In order to be able to use javascript to automate the formation of HTML components so that pages could actively respond to server side updates.
+
   **moment**: Used to easily be able to convert time between timezones, as in the database all time was in UTC
+
   **body-parser**: Used so that Request data could be parsed more easily
+  
   **cookie-parser**: Used so that cookies could be read more easily
+
   **nodemon**: Used so that when the web app was running, as I saved files the app would reload and update with the files
+
   **ts-node**: Allowed nodemon to work with typescript and actively compile the files to Javascript and then run them
   
   The following images, show different EJS files that are used to render the different pages of my website.
