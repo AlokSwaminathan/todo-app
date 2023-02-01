@@ -13,6 +13,8 @@ and Typescript, which was used because it would help deal with many of the typin
   **nodemon**: Used so that when the web app was running, as I saved files the app would reload and update with the files
   **ts-node**: Allowed nodemon to work with typescript and actively compile the files to Javascript and then run them
   
+  The following images, show different EJS files that are used to render the different pages of my website.
+  
   ![](/images/homeNoLogin.png)
   This is the home screen before you log in, very barebones and just leads you to logging in or signing up
   
@@ -30,4 +32,10 @@ and Typescript, which was used because it would help deal with many of the typin
    
   ![](/images/addGroup.png)
   In this page you can see all of your groups, along with the colors that you have chosen for them, if you want, you can add a new group entirely and name it whatever you like, as long at it doesn't overlap, and give it any color that isn't completely white. If either of those two conditions aren't met, the group will be rejected by client side javascript. Once it gets through to the server, the todo is added and the page is refreshed to hold the new todo. You can also choose to click on a todo so you can edit its name and color, or choose to delete it, prompting a confirmation. When confirming the deletion of a todo, you can make the option to remove all of the tasks corresponding to it as well.
+
+Some of the other files in my website are ./src/index.ts and ./src/modules/sqlite.ts
+
+In index.ts, I added the code to do all of the routing to the different pages, with POST requests to alter data, and GET requests to load a new page.
+
+In sqlite.ts, I added sqlite3 functionality, and added the necessary functions to modify the database to add users, todos, and groups. These functions were then imported into index.ts, where they could be called on POST request so that the data in database.db would be updated.
     
